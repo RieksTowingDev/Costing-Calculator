@@ -61,6 +61,9 @@ app.post('/submit', async (req, res) => {
         request.input('totalVAT', sql.Float, totalVAT);
         request.input('Client', sql.VarChar, client);
         request.input('Jobnr', sql.Int, jobnr);
+        const [rows] = await db.query(`SELECT MAX(id) AS last_id FROM my_table`);
+        const nextId = (rows[0].last_id || 0) + 1;
+        const date = Date.now();
         console.log(vehicle, callOut, calloutTotal, Traveltotal, labourTotal, towtotal, ADDtotal, Tolltotal, totalExclVAT, totalVAT, client, jobnr);
         await request.query(`
             INSERT INTO CalculatedCosts (vehicle, callout, callouttotal, perkm, labourprep, kmtowed, additional, toll, totalexlvat, totalinclvat, client, jobrn)
