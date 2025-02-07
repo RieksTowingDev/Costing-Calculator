@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costing Calculator</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid red;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Costing Calculator</h1>
+    <form id="costingForm">
+        <label for="client">Client: <input type="text" id="client" placeholder="Enter Client Name"></label>
+        <label for="jobnr">Job nr: <input type="jobnr" id="jobnr" placeholder="Enter Job Number"></label>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Tariff</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Vehicle:
+                        <select name="Vehicles" id="Vehicles">
+                            <option value="CarCarrier">Car Carrier - Transporter</option>
+                            <option value="26Truck">2-6 Ton Rigid & S/A Truck Tractor</option>
+                            <option value="79Truck">7-9 Ton Rigid & S/A Truck Tractor</option>
+                            <option value="1015Truck">10-15 Ton Rigid & S/A Truck Tractor</option>
+                            <option value="artic46">Artic 4-6 Axles, Twin Steer & D/A Compactor 18-28 Ton</option>
+                            <option value="artic78">Artic 7-8 Axle 42 Ton</option>
+                            <option value="artic9">Artic 9 Axle 42+ Ton (Abnormal)</option>
+                            <option value="SingleBus">Single Axle Busses</option>
+                            <option value="DoubleBus">Double Axle Busses</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Callouts:
+                        <input type="radio" name="CallOut" id="Accident" value="Accident" data-tariff="15">
+                        <label for="Accident">Accident</label>
+                        <input type="radio" name="CallOut" id="Mechanical" value="Mechanical" data-tariff="20">
+                        <label for="Mechanical">Mechanical</label>
+                        <input type="radio" name="CallOut" id="Travel" value="Travel" data-tariff="25">
+                        <label for="Travel">Travel</label>
+                    </td>
+                    <td><input type="number" name="Calloutqty" id="Calloutqty" value="1" min="0" class="quantity"></td>
+                    <td>R<span id="calloutTariff">0.00</span></td>
+                    <td name="calloutTotal">R<span id="calloutTotal">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>From</td>
+                    <td><input type="text" id="from" placeholder="Enter starting location"></td>
+                </tr>
+                <tr>
+                    <td>To</td>
+                    <td><input type="text" id="to" placeholder="Enter destination"></td>
+                </tr>
+                <tr>
+                    <td>km Travelled</td>
+                    <td><input type="number" name="travelqty" id="travelqty" value="1" min="0" class="quantity" readonly></td>
+                    <td>R<span id="Traveltariff"></span></td>
+                    <td>R<span id="Traveltotal"></span></td>
+                </tr>
+                <tr>
+                    <td>km Towed
+                        <input type="radio" name="tow" id="empty" value="empty" data-tariff="15">
+                        <label for="empty">Empty</label>
+                        <input type="radio" name="tow" id="loaded" value="loaded" data-tariff="20">
+                        <label for="loaded">Loaded</label>
+                    </td>
+                    <td><input type="number" name="towqty" id="towqty" value="1" min="0" class="quantity"></td>
+                    <td>R<span id="towtariff"></td>
+                    <td>R<span id="towtotal"></td>
+                </tr>
+                <tr>
+                    <td>Labour Prep</td>
+                    <td><input type="number" name="LabourPrepQty" id="LabourPrepQty" value="1" min="0" class="quantity"></td>
+                    <td id="LabourPreptariff">R<span id="labourTariff">0.00</span></td>
+                    <td id="LabourPreptotal">R<span id="labourTotal">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>ADD:
+                        <input type="checkbox" name="AddItems" id="CraneUse" value="CraneUse" data-tariff="30">
+                        <label for="CraneUse">Crane Use</label>
+                        <input type="checkbox" name="AddItems" id="AccidentRec" value="AccidentRec" data-tariff="40">
+                        <label for="AccidentRec">Accident Recovery</label>
+                        <input type="checkbox" name="AddItems" id="MudRec" value="MudRec" data-tariff="50">
+                        <label for="MudRec">Mud Recovery</label>
+                        <input type="checkbox" name="AddItems" id="LoadOff" value="LoadOff" data-tariff="60">
+                        <label for="LoadOff">Load/Offload</label>
+                        <input type="checkbox" name="AddItems" id="Winch" value="Winch" data-tariff="70">
+                        <label for="Winch">Winch</label>
+                        <input type="checkbox" name="AddItems" id="Liftreach" value="Liftreach" data-tariff="80">
+                        <label for="Liftreach">Lift & Reach</label>
+                    </td>
+                    <td><input type="number" name="ADDqty" id="ADDqty" value="1" min="0" class="quantity"></td>
+                    <td>R<input type="number" name="ADDtariff" id="ADDtariff" value="1" min="0" class="tariff"></td>
+                    <td class="ADDtotal">R<span id="ADDtotal">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Toll</td>
+                    <td><input type="number" name="TollQty" id="TollQty" value="1" min="0" class="quantity"></td>
+                    <td>R<input type="number" name="Tolltariff" id="Tolltariff" value="1" min="0" class="tariff"></td>
+                    <td class="Tolltotal">R<span id="Tolltotal">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Total Excl VAT</td>
+                    <td></td>
+                    <td></td>
+                    <td>R<span id="totalExclVAT">0.00</span></td>
+                </tr>
+                <tr>
+                    <td>Total Incl VAT</td>
+                    <td></td>
+                    <td></td>
+                    <td>R<span id="totalVAT">0.00</span></td>
+            </tbody>
+        </table>
+        <button type="submit" >Submit</button>
+    </form>
+
+    <div id="map"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const vehicleSelect = document.getElementById('Vehicles');
+            const calloutRadios = document.querySelectorAll('input[name="CallOut"]');
+            const calloutTariffElement = document.getElementById('calloutTariff');
+            const calloutTotalElement = document.getElementById('calloutTotal');
+            const calloutQtyElement = document.getElementById('Calloutqty');
+            const travelQtyElement = document.getElementById('travelqty');
+            const travelTariffElement = document.getElementById('Traveltariff');
+            const travelTotalElement = document.getElementById('Traveltotal');
+            const labourQtyElement = document.getElementById('LabourPrepQty');
+            const labourTariffElement = document.getElementById('labourTariff');
+            const labourTotalElement = document.getElementById('labourTotal');
+            const towQtyElement = document.getElementById('towqty');
+            const towTariffElement = document.getElementById('towtariff');
+            const towTotalElement = document.getElementById('towtotal');
+            const towSelect = document.querySelectorAll('input[name="tow"]');
+            const addSelect = document.querySelectorAll('input[name="AddItems"]');
+            const addQtyElement = document.getElementById('ADDqty');
+            const addTariffElement = document.getElementById('ADDtariff');
+            const addTotalElement = document.getElementById('ADDtotal');
+            const tollQtyElement = document.getElementById('TollQty');
+            const tollTariffElement = document.getElementById('Tolltariff');
+            const tollTotalElement = document.getElementById('Tolltotal');
+            const totalExclVATElement = document.getElementById('totalExclVAT');
+            const totalVATElement = document.getElementById('totalVAT');
+
+
+            function updateTariff() {
+                const selectedVehicle = vehicleSelect.value;
+                const selectedCallout = document.querySelector('input[name="CallOut"]:checked');
+                const towSelect = document.querySelector('input[name="tow"]:checked');
+                console.log('Selected Vehicle:', selectedVehicle);
+                console.log('Selected Callout:', selectedCallout ? selectedCallout.value : 'None');
+                if (selectedCallout) {
+                    let tariff = 0;
+                    let travelTariff = 1;
+                    let towTariff = 0;
+                    console.log('winning');
+                    if (selectedVehicle === 'CarCarrier') {
+                        console.log('winning2');
+                        console.log(selectedCallout.id);
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 1130;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            console.log('winning3');
+                            tariff = 1920;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 1050;
+                        }
+                        travelTariff = 11.90;
+                        labourTariff = 370;
+                        if (towSelect.id === 'empty') {
+                            console.log('winning4');
+                            towTariff = 0;
+                        } else if (towSelect.id === 'loaded') {
+                            console.log('winning5');
+                            towTariff = 14.8;
+                        }
+                    } else if (selectedVehicle === '26Truck') {
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 1510;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            tariff = 2370;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 1280;
+                        }
+                        travelTariff = 18.00;
+                        labourTariff =550;
+                        if (towSelect.id === 'empty') {
+                            towTariff = 19;
+                        } else if (towSelect.id === 'loaded') {
+                            towTariff = 23;
+                        }
+                    } else if (selectedVehicle === '79Truck') {
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 1900;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            tariff = 2960;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 1460;
+                        }
+                        travelTariff = 19.50;
+                        labourTariff = 550;
+                        if (towSelect.id === 'empty') {
+                            towTariff = 21;
+                        } else if (towSelect.id === 'loaded') {
+                            towTariff = 25.8;
+                        }
+                    } else if (selectedVehicle === '1015Truck') {
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 2300;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            tariff = 3250;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 1590;
+                        }
+                        travelTariff = 20.50;
+                        labourTariff = 660;
+                        if (towSelect.id === 'empty') {
+                            towTariff = 22.8;
+                        } else if (towSelect.id === 'loaded') {
+                            towTariff = 31.9;
+                        }
+                    } else if (selectedVehicle === 'artic46') {
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 2490;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            tariff = 4040;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 1890;
+                        }
+                        travelTariff = 21.00;
+                        labourTariff = 910;
+                        if (towSelect.id === 'empty') {
+                            towTariff = 25.3;
+                        } else if (towSelect.id === 'loaded') {
+                            towTariff = 42.7;
+                        }
+                    } else if (selectedVehicle === 'artic78') {
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 2570;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            tariff = 4420;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 2030;
+                        }
+                        travelTariff = 21.00;
+                        labourTariff = 910;
+                        if (towSelect.id === 'empty') {
+                            towTariff = 28;
+                        } else if (towSelect.id === 'loaded') {
+                            towTariff = 45.7;
+                        }
+                    } else if (selectedVehicle === 'artic9') {
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 3100;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            tariff = 4860;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 2230;
+                        }
+                        travelTariff = 21.00;
+                        labourTariff = 910;
+                        if (towSelect.id === 'empty') {
+                            towTariff = 32;
+                        } else if (towSelect.id === 'loaded') {
+                            towTariff = 49.8;
+                        }
+                    } else if (selectedVehicle === 'SingleBus') {
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 2440;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            tariff = 3700;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 1720;
+                        }
+                        travelTariff = 21.00;
+                        labourTariff = 910;
+                        if (towSelect.id === 'empty') {
+                            towTariff = 28.5;
+                        }
+
+                    } else if (selectedVehicle === 'DoubleBus') {
+                        if (selectedCallout.id === 'Accident') {
+                            tariff = 2490;
+                        } else if (selectedCallout.id === 'Mechanical') {
+                            tariff = 4040;
+                        } else if (selectedCallout.id === 'Travel') {
+                            tariff = 1890;
+                        }
+                        travelTariff = 21.00;
+                        labourTariff = 910;
+                        if (towSelect.id === 'empty') {
+                            towTariff = 30.5;
+                        }
+                    }
+                    console.log('Calculated Tariff:', travelTariff);
+                    calloutTariffElement.textContent = tariff.toFixed(2);
+                    calloutTotalElement.textContent = (tariff * parseInt(calloutQtyElement.value)).toFixed(2);
+                    calloutQtyElement.addEventListener('input', updateTariff);
+                    console.log('Calculated Tariff 2:', travelTariff.toFixed(2));
+                    travelTariffElement.textContent = travelTariff.toFixed(2);
+                    console.log('Travel Qty   1:', travelQtyElement.value);
+                    if (travelQtyElement) {
+                        console.log('Travel Qty:', travelQtyElement.value);
+                        travelTotalElement.textContent = (travelTariff * parseInt(travelQtyElement.value)).toFixed(2);
+                        
+                    } else {
+                        travelTotalElement.textContent = (travelTariff * 1).toFixed(2);
+                    }
+                    labourTariffElement.textContent = labourTariff.toFixed(2);
+                    labourTotalElement.textContent = (labourTariff * parseInt(labourQtyElement.value)).toFixed(2);
+                    console.log('Tow Qty:', towTariff);
+                    towTariffElement.textContent = towTariff.toFixed(2);
+                    towTotalElement.textContent =(towTariff * parseInt(towQtyElement.value)).toFixed(2);
+                    addTariffElement.textContent = (parseFloat(addTariffElement.value)).toFixed(2);
+                    addTotalElement.textContent = ((parseFloat(addTariffElement.value)) * parseInt(addQtyElement.value)).toFixed(2);
+                    tollTariffElement.textContent = (parseFloat(tollTariffElement.value)).toFixed(2);
+                    tollTotalElement.textContent = ((parseFloat(tollTariffElement.value)) * parseInt(tollQtyElement.value)).toFixed(2);
+                    totalExclVATElement.textContent = (tariff * parseInt(calloutQtyElement.value) + travelTariff * parseInt(travelQtyElement.value) + labourTariff * parseInt(labourQtyElement.value) + towTariff * parseInt(towQtyElement.value) + parseFloat(addTariffElement.value) * parseInt(addQtyElement.value) + parseFloat(tollTariffElement.value) * parseInt(tollQtyElement.value)).toFixed(2);
+                    totalVATElement.textContent = (totalExclVATElement.textContent * 1.15).toFixed(2);
+                    console.log(calloutTotalElement.textContent, travelTotalElement.textContent, labourTotalElement.textContent, towTotalElement.textContent, addTotalElement.textContent, tollTotalElement.textContent);
+                    
+                }
+            }
+
+            vehicleSelect.addEventListener('change', updateTariff);
+            calloutRadios.forEach(radio => radio.addEventListener('change', updateTariff));
+            travelQtyElement.addEventListener('input', updateTariff);
+            labourQtyElement.addEventListener('input', updateTariff);
+            towQtyElement.addEventListener('input', updateTariff);
+            towSelect.forEach(radio => radio.addEventListener('change', updateTariff));
+            addQtyElement.addEventListener('input', updateTariff);
+            addTariffElement.addEventListener('input', updateTariff);
+            tollQtyElement.addEventListener('input', updateTariff);
+            tollTariffElement.addEventListener('input', updateTariff);
+
+            document.getElementById('costingForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const data = {};
+                formData.forEach((value, key) => {
+                    if (!data[key]) {
+                        data[key] = value;
+                    } else {
+                        if (!Array.isArray(data[key])) {
+                            data[key] = [data[key]];
+                        }
+                        data[key].push(value);
+                    }
+                });
+
+                document.getElementById('costingForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const data = {
+                    Vehicles: document.getElementById('Vehicles').value,
+                    CallOut: document.querySelector('input[name="CallOut"]:checked')?.value,
+                    calloutTotal: parseFloat(document.getElementById('calloutTotal').textContent) || 0,
+                    Traveltotal: parseFloat(document.getElementById('Traveltotal').textContent) || 0,
+                    labourTotal: parseFloat(document.getElementById('labourTotal').textContent) || 0,
+                    towtotal: parseFloat(document.getElementById('towtotal').textContent) || 0,
+                    ADDtotal: parseFloat(document.getElementById('ADDtotal').textContent) || 0,
+                    Tolltotal: parseFloat(document.getElementById('Tolltotal').textContent) || 0,
+                    totalExclVAT: parseFloat(document.getElementById('totalExclVAT').textContent) || 0,
+                    totalVAT: parseFloat(document.getElementById('totalVAT').textContent) || 0,
+                    client: document.getElementById('client').value || "Unknown Client",
+                    jobnr: document.getElementById('jobnr').value || "00000"
+                };
+
+                console.log("🔹 Data being sent to backend:", data);
+
+                fetch('/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ Response from backend:", data);
+                })
+                .catch(error => {
+                    console.error("❌ Fetch error:", error);
+                });
+            });
+        });
+        });    
+    </script>
+    <script type="application/javascript" src="map.js"></script>
+    <script type="application/javascript" src="server.js"></script>
+</body>
+</html>

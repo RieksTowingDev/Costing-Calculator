@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@googlemaps/js-api-loader": "^1.16.8",
+    "express": "^4.21.2",
+    "mssql": "^11.0.1"
+  }
+}
