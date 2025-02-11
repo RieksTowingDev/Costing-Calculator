@@ -10,7 +10,7 @@ pages_build_output_dir = "public"
 bucket = "./public"
 
 [build]
-command = ""  # Leave empty if no build process
+command = ""  # If using React or Vite, set this to "npm run build"
 
 [[d1_databases]]
 binding = "DB"
