@@ -1,5 +1,5 @@
 name = "costing-calculator"
-main = "js/server.js"  # This should point to your Worker script handling D1
+main = "server.js"
 type = "javascript"
 
 account_id = "097d6d92c313a811285762c8e24ba9da"
@@ -7,12 +7,9 @@ workers_dev = true
 compatibility_date = "2025-02-11"
 
 [[d1_databases]]
-binding = "DB"  # Name used in your Worker code (e.g., env.DB)
+binding = "DB"
 database_name = "costingcalculator"
 database_id = "aea99c46-60ae-4685-a03c-a88feb063566"
 
 [site]
-bucket = "./public"  # Make sure your frontend files go here
-
-[build]
-command = "npm run build"  # If using a frontend framework (React, Vite, etc.)
+bucket = "./public"  # Ensure your frontend is here
