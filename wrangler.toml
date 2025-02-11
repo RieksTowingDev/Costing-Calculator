@@ -1,0 +1,11 @@
+name = "costing-calculator"
+main = "js/server.js"
+type = "javascript"
+
+account_id = "097d6d92c313a811285762c8e24ba9da"
+workers_dev = true
+compatibility_date = "2025-02-11"
+
+binding = "DB"
+database_name = "costingcalculator"
+database_id = "aea99c46-60ae-4685-a03c-a88feb063566"
