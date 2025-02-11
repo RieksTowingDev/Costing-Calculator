@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { connectToDatabase } = require('./databaseconnection');
 const sql = require('mssql');
+const { env } = require('process');
 
 const app = express();
 const port = 3000;
@@ -10,6 +11,7 @@ const port = 3000;
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname)));
+
 
 // Connect to the database
 connectToDatabase().then(() => {
@@ -24,7 +26,7 @@ app.get('/', (req, res) => {
 });
 
 // Handle form submission
-app.post('/submit', async (req, res) => {
+app.post('/submit', async (req, env) => {
     const data = req.body;
 
     // Extract variables from the form data
@@ -43,39 +45,52 @@ app.post('/submit', async (req, res) => {
     console.log("Extracted Data:", {
         vehicle, callOut, client, jobnr, calloutTotal, Traveltotal, labourTotal, towtotal, ADDtotal, Tolltotal, totalExclVAT, totalVAT
     }); 
+    //try {
+    //export default {
     
-
-    try {
-        const pool = await sql.connect();
-        const request = pool.request();
-        request.input('Vehicles', sql.VarChar, vehicle);
-        request.input('CallOut', sql.VarChar, callOut);
-        request.input('calloutTotal', sql.Float, calloutTotal);
-        console.log(calloutTotal);
-        request.input('Traveltotal', sql.Float, Traveltotal);
-        request.input('labourTotal', sql.Float, labourTotal);
-        request.input('towtotal', sql.Float, towtotal);
-        request.input('ADDtotal', sql.Float, ADDtotal);
-        request.input('Tolltotal', sql.Float, Tolltotal);
-        request.input('totalExclVAT', sql.Float, totalExclVAT);
-        request.input('totalVAT', sql.Float, totalVAT);
-        request.input('Client', sql.VarChar, client);
-        request.input('Jobnr', sql.Int, jobnr);
-        const [rows] = await db.query(`SELECT MAX(qoutenr) AS last_id FROM CalculatedCosts`);
+        const[rows] = await env.DB.prepare(`SELECT MAX(qoutenr) AS last_id FROM CalculatedCosts`);
         const nextId = (rows[0].last_id || 0) + 1;
         const qoutenr = "Q00" + nextId;
         const date = Date.now();
-        console.log(vehicle, callOut, calloutTotal, Traveltotal, labourTotal, towtotal, ADDtotal, Tolltotal, totalExclVAT, totalVAT, client, jobnr);
-        await request.query(`
-            INSERT INTO CalculatedCosts (date, fullqoutenr, qoutenr,vehicle, callout, callouttotal, perkm, labourprep, kmtowed, additional, toll, totalexlvat, totalinclvat, client, jobrn)
-            VALUES (@date, @qoutenr, @nextId, '${vehicle}', @CallOut, @calloutTotal, @Traveltotal, @labourTotal, @towtotal, @ADDtotal, @Tolltotal, @totalExclVAT, @totalVAT, @Client, @Jobnr)
-        `);
+        await env.DB.prepare(`
+            INSERT INTO CalculatedCosts (date, fullqoutenr, qoutenr,vehicle, callout, callouttotal, perkm, labourprep, kmtowed, additional, toll, totalexlvat, totalinclvat, client, jobnr)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        )
+        .bind(date, qoutenr, nextId, vehicle, callOut, calloutTotal, Traveltotal, labourTotal, towtotal, ADDtotal, Tolltotal, totalExclVAT, totalVAT, client, jobnr);
 
-        res.json({ message: 'Data saved successfully', totalVAT});
-    } catch (err) {
-        console.error('Database query failed:', err);
-        res.status(500).json({ error: 'Database query failed' });
-    }
+    
+
+//    try {
+//        const pool = await sql.connect();
+//        const request = pool.request();
+//        request.input('Vehicles', sql.VarChar, vehicle);
+//        request.input('CallOut', sql.VarChar, callOut);
+//        request.input('calloutTotal', sql.Float, calloutTotal);
+//        console.log(calloutTotal);
+ //       request.input('Traveltotal', sql.Float, Traveltotal);
+//        request.input('labourTotal', sql.Float, labourTotal);
+//        request.input('towtotal', sql.Float, towtotal);
+//        request.input('ADDtotal', sql.Float, ADDtotal);
+//        request.input('Tolltotal', sql.Float, Tolltotal);
+ //       request.input('totalExclVAT', sql.Float, totalExclVAT);
+//        request.input('totalVAT', sql.Float, totalVAT);
+//        request.input('Client', sql.VarChar, client);
+//        request.input('Jobnr', sql.Int, jobnr);
+//        const [rows] = await db.query(`SELECT MAX(qoutenr) AS last_id FROM CalculatedCosts`);
+//        const nextId = (rows[0].last_id || 0) + 1;
+//        const qoutenr = "Q00" + nextId;
+//        const date = Date.now();
+//        console.log(vehicle, callOut, calloutTotal, Traveltotal, labourTotal, towtotal, ADDtotal, Tolltotal, totalExclVAT, totalVAT, client, jobnr);
+ //       await request.query(`
+//            INSERT INTO CalculatedCosts (date, fullqoutenr, qoutenr,vehicle, callout, callouttotal, perkm, labourprep, kmtowed, additional, toll, totalexlvat, totalinclvat, client, jobrn)
+//            VALUES (@date, @qoutenr, @nextId, '${vehicle}', @CallOut, @calloutTotal, @Traveltotal, @labourTotal, @towtotal, @ADDtotal, @Tolltotal, @totalExclVAT, @totalVAT, @Client, @Jobnr)
+//        `);
+//
+//        res.json({ message: 'Data saved successfully', totalVAT});
+//    } catch (err) {
+//        console.error('Database query failed:', err);
+//        res.status(500).json({ error: 'Database query failed' });
+//    }
 });
 
 app.listen(port, () => {
