@@ -1,18 +1,19 @@
 name = "costing-calculator"
-main = "server.js"
 type = "javascript"
-
 account_id = "097d6d92c313a811285762c8e24ba9da"
-workers_dev = true
+workers_dev = false
 compatibility_date = "2025-02-11"
+
+# Cloudflare Pages Configuration
+pages_build_output_dir = "public"
+
+[site]
+bucket = "./public"
+
+[build]
+command = "" # Leave empty if no build process, or use `npm run build` if needed
 
 [[d1_databases]]
 binding = "DB"
 database_name = "costingcalculator"
 database_id = "aea99c46-60ae-4685-a03c-a88feb063566"
-
-[site]
-bucket = "./public"
-
-# Ensure Cloudflare Pages knows where to look for the build output
-pages_build_output_dir = "public"
