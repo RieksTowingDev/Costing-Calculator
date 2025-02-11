@@ -1,16 +1,7 @@
 name = "costing-calculator"
-account_id = "097d6d92c313a811285762c8e24ba9da"
-workers_dev = false
 compatibility_date = "2025-02-11"
 
-# Cloudflare Pages Configuration
 pages_build_output_dir = "public"
-
-[site]
-bucket = "./public"
-
-[build]
-command = ""  # If using React or Vite, set this to "npm run build"
 
 [[d1_databases]]
 binding = "DB"
