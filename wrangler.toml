@@ -1,17 +1,16 @@
 name = "costing-calculator"
-type = "javascript"
 account_id = "097d6d92c313a811285762c8e24ba9da"
 workers_dev = false
 compatibility_date = "2025-02-11"
 
-# ✅ Ensure Cloudflare Pages knows where to find static files
-pages_build_output_dir = "./public"
+# Cloudflare Pages Configuration
+pages_build_output_dir = "public"
 
 [site]
 bucket = "./public"
 
 [build]
-command = ""  # If using React or Vite, set this to "npm run build"
+command = ""  # Leave empty if no build process
 
 [[d1_databases]]
 binding = "DB"
