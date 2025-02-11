@@ -12,7 +12,7 @@ database_name = "costingcalculator"
 database_id = "aea99c46-60ae-4685-a03c-a88feb063566"
 
 [site]
-bucket = "./public" # Make sure this folder exists
+bucket = "./public"
 
-[build]
-command = "npm run build" # Change to match your frontend build process
+# Ensure Cloudflare Pages knows where to look for the build output
+pages_build_output_dir = "public"
