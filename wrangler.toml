@@ -12,4 +12,7 @@ database_name = "costingcalculator"
 database_id = "aea99c46-60ae-4685-a03c-a88feb063566"
 
 [site]
-bucket = "./public"  # Ensure your frontend is here
+bucket = "./public" # Make sure this folder exists
+
+[build]
+command = "npm run build" # Change to match your frontend build process
