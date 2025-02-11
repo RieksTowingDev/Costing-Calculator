@@ -1,8 +1,10 @@
 name = "costing-calculator"
 compatibility_date = "2025-02-11"
 
-# ✅ Cloudflare Pages Configuration
-pages_build_output_dir = "public"
+# Ensure Cloudflare Pages serves from /public directory
+[site]
+bucket = "./public"
+entry-point = "public"
 
 [[d1_databases]]
 binding = "DB"
