@@ -91,7 +91,7 @@
                 </tr>
                 <tr>
                     <td>km Travelled</td>
-                    <td><input type="number" name="travelqty" id="travelqty" value="1" min="0" class="quantity">0</td>
+                    <td><input type="number" name="travelqty" id="travelqty" value="1" min="0" class="quantity"></td>
                     <td>R<span id="Traveltariff">0.00</span></td>
                     <td>R<span id="Traveltotal">0.00</span></td>
                 </tr>
@@ -102,7 +102,7 @@
                         <input type="radio" name="tow" id="loaded" value="loaded" data-tariff="20">
                         <label for="loaded">Loaded</label>
                     </td>
-                    <td><input type="number" name="towqty" id="towqty" value="1" min="0" class="quantity">0</td>
+                    <td><input type="number" name="towqty" id="towqty" value="1" min="0" class="quantity"></td>
                     <td>R<span id="towtariff">0.00</td>
                     <td>R<span id="towtotal">0.00</td>
                 </tr>
@@ -127,15 +127,15 @@
                         <input type="checkbox" name="AddItems" id="Liftreach" value="Liftreach" data-tariff="80">
                         <label for="Liftreach">Lift & Reach</label>
                     </td>
-                    <td><input type="number" name="ADDqty" id="ADDqty" value="1" min="0" class="quantity">0</td>
-                    <td>R<input type="number" name="ADDtariff" id="ADDtariff" value="1" min="0" class="tariff">0.00</td>
+                    <td><input type="number" name="ADDqty" id="ADDqty" value="1" min="0" class="quantity"></td>
+                    <td>R<input type="number" name="ADDtariff" id="ADDtariff" value="1" min="0" class="tariff"></td>
                     <td class="ADDtotal">R<span id="ADDtotal">0.00</span></td>
                 </tr>
                 <tr>
                     <td>Toll</td>
                     <td><input type="number" name="TollQty" id="TollQty" value="1" min="0" class="quantity">0</td>
-                    <td>R<input type="number" name="Tolltariff" id="Tolltariff" value="1" min="0" class="tariff" placeholder="Enter the total payed for Toll">0.00</td>
-                    <td class="Tolltotal">R<span id="Tolltotal">0.00</span></td>
+                    <td>R<input type="number" name="Tolltariff" id="Tolltariff" value="1" min="0" class="tariff" placeholder="Enter the total payed for Toll"></td>
+                    <td class="Tolltotal">R<span id="Tolltotal"></span></td>
                 </tr>
                 <tr>
                     <td>Total Excl VAT</td>
@@ -191,7 +191,7 @@
                 console.log('Selected Callout:', selectedCallout ? selectedCallout.value : 'None');
                 if (selectedCallout) {
                     let tariff = 0;
-                    let travelTariff = 1;
+                    let travelTariff = 0;
                     let towTariff = 0;
                     console.log('winning');
                     if (selectedVehicle === 'CarCarrier') {
