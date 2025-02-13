@@ -29,7 +29,7 @@
         }
         input{
             border-radius: 4px;
-            background-color: #9fecfb;
+            background-color: white;
             border: 0%;
         }
     </style>
@@ -82,16 +82,18 @@
                 <tr>
                     <td>From</td>
                     <td><input type="text" id="from" placeholder="Enter starting location"></td>
+                    <td><input type="text" id="fromsec" placeholder="Enter second destination"></td>
                 </tr>
                 <tr>
                     <td>To</td>
                     <td><input type="text" id="to" placeholder="Enter destination"></td>
+                    <td><input type="text" id="tosec" placeholder="Enter third destination"></td>
                 </tr>
                 <tr>
                     <td>km Travelled</td>
-                    <td><input type="number" name="travelqty" id="travelqty" value="1" min="0" class="quantity"></td>
-                    <td>R<span id="Traveltariff"></span></td>
-                    <td>R<span id="Traveltotal"></span></td>
+                    <td><input type="number" name="travelqty" id="travelqty" value="1" min="0" class="quantity">0</td>
+                    <td>R<span id="Traveltariff">0.00</span></td>
+                    <td>R<span id="Traveltotal">0.00</span></td>
                 </tr>
                 <tr>
                     <td>km Towed
@@ -100,9 +102,9 @@
                         <input type="radio" name="tow" id="loaded" value="loaded" data-tariff="20">
                         <label for="loaded">Loaded</label>
                     </td>
-                    <td><input type="number" name="towqty" id="towqty" value="1" min="0" class="quantity"></td>
-                    <td>R<span id="towtariff"></td>
-                    <td>R<span id="towtotal"></td>
+                    <td><input type="number" name="towqty" id="towqty" value="1" min="0" class="quantity">0</td>
+                    <td>R<span id="towtariff">0.00</td>
+                    <td>R<span id="towtotal">0.00</td>
                 </tr>
                 <tr>
                     <td>Labour Prep</td>
@@ -125,14 +127,14 @@
                         <input type="checkbox" name="AddItems" id="Liftreach" value="Liftreach" data-tariff="80">
                         <label for="Liftreach">Lift & Reach</label>
                     </td>
-                    <td><input type="number" name="ADDqty" id="ADDqty" value="1" min="0" class="quantity"></td>
-                    <td>R<input type="number" name="ADDtariff" id="ADDtariff" value="1" min="0" class="tariff"></td>
+                    <td><input type="number" name="ADDqty" id="ADDqty" value="1" min="0" class="quantity">0</td>
+                    <td>R<input type="number" name="ADDtariff" id="ADDtariff" value="1" min="0" class="tariff">0.00</td>
                     <td class="ADDtotal">R<span id="ADDtotal">0.00</span></td>
                 </tr>
                 <tr>
                     <td>Toll</td>
-                    <td><input type="number" name="TollQty" id="TollQty" value="1" min="0" class="quantity"></td>
-                    <td>R<input type="number" name="Tolltariff" id="Tolltariff" value="1" min="0" class="tariff"></td>
+                    <td><input type="number" name="TollQty" id="TollQty" value="1" min="0" class="quantity">0</td>
+                    <td>R<input type="number" name="Tolltariff" id="Tolltariff" value="1" min="0" class="tariff">0.00</td>
                     <td class="Tolltotal">R<span id="Tolltotal">0.00</span></td>
                 </tr>
                 <tr>
@@ -352,7 +354,7 @@
                     addTariffElement.textContent = (parseFloat(addTariffElement.value)).toFixed(2);
                     addTotalElement.textContent = ((parseFloat(addTariffElement.value)) * parseInt(addQtyElement.value)).toFixed(2);
                     tollTariffElement.textContent = (parseFloat(tollTariffElement.value)).toFixed(2);
-                    tollTotalElement.textContent = ((parseFloat(tollTariffElement.value)) * parseInt(tollQtyElement.value)).toFixed(2);
+                    tollTotalElement.textContent = ((parseFloat(tollTariffElement.value)) ).toFixed(2);
                     totalExclVATElement.textContent = (tariff * parseInt(calloutQtyElement.value) + travelTariff * parseInt(travelQtyElement.value) + labourTariff * parseInt(labourQtyElement.value) + towTariff * parseInt(towQtyElement.value) + parseFloat(addTariffElement.value) * parseInt(addQtyElement.value) + parseFloat(tollTariffElement.value) * parseInt(tollQtyElement.value)).toFixed(2);
                     totalVATElement.textContent = (totalExclVATElement.textContent * 1.15).toFixed(2);
                     console.log(calloutTotalElement.textContent, travelTotalElement.textContent, labourTotalElement.textContent, towTotalElement.textContent, addTotalElement.textContent, tollTotalElement.textContent);

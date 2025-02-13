@@ -3,6 +3,8 @@ let directionsService;
 let directionsRenderer;
 let startMarker;
 let endMarker;
+//let secendMarker;
+//let thirdendMarker;
 let autocompleteFrom;
 let autocompleteTo;
 
@@ -24,15 +26,21 @@ function initMap() {
     // Initialize the autocomplete fields
     autocompleteFrom = new google.maps.places.Autocomplete(document.getElementById('from'));
     autocompleteTo = new google.maps.places.Autocomplete(document.getElementById('to'));
+    //autocompleteFromsec = new google.maps.places.Autocomplete(document.getElementById('fromsec'));
+    //autocompleteTosec = new google.maps.places.Autocomplete(document.getElementById('tosec'));
 
     // Add event listeners to the autocomplete fields
     autocompleteFrom.addListener('place_changed', onPlaceChanged);
     autocompleteTo.addListener('place_changed', onPlaceChanged);
+    //autocompleteFromsec.addListener('place_changed', onPlaceChanged);
+    //autocompleteTosec.addListener('place_changed', onPlaceChanged);
 }
 
 function onPlaceChanged() {
     const fromPlace = autocompleteFrom.getPlace();
     const toPlace = autocompleteTo.getPlace();
+    //const fromPlacesec = autocompleteFromsec.getPlace();
+    //const toPlacesec = autocompleteTosec.getPlace();
 
     if (fromPlace && fromPlace.geometry && toPlace && toPlace.geometry) {
         if (startMarker) startMarker.setMap(null);
